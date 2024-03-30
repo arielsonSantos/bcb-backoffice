@@ -1,0 +1,54 @@
+services:
+    bcb-backoffice-container:
+        build:
+          context: .
+          dockerfile: Dockerfile
+        container_name: bcb-backoffice
+        deploy:
+            restart_policy:
+                condition: on-failure
+                delay: 5s
+                max_attempts: 3
+        ports:
+          - 4000:4000
+        depends_on:
+          db:
+            condition: service_healthy
+          rabbitmq:
+            condition: service_healthy
+        environment:
+            - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/mydatabase
+            - SPRING_DATASOURCE_DRIVERCLASSNAME=org.postgresql.Driver
+            - SPRING_DATASOURCE_USERNAME=myuser
+            - SPRING_DATASOURCE_PASSWORD=secret
+            - SPRING_RABBITMQ_HOST=rabbitmq
+            - SPRING_RABBITMQ_PORT=5672
+            - SPRING_RABBITMQ_USERNAME=guest
+            - SPRING_RABBITMQ_PASSWORD=guest
+
+    rabbitmq:
+        image: rabbitmq:3-management
+        container_name: rabbitmq
+        ports:
+          - 5672:5672
+          - 15672:15672
+        healthcheck:
+            test: rabbitmq-diagnostics check_port_connectivity
+            interval: 30s
+            timeout: 15s
+            retries: 10
+
+    db:
+        image: 'postgres:latest'
+        container_name: db
+        ports:
+            - '5432'
+        environment:
+            - 'POSTGRES_USER=myuser'
+            - 'POSTGRES_DB=mydatabase'
+            - 'POSTGRES_PASSWORD=secret'
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready", "-d", "mydatabase"]
+            interval: 30s
+            timeout: 15s
+            retries: 10

@@ -1,0 +1,14 @@
+{
+    "properties": [
+        {
+            "name": "bcb.message.sms.cost",
+            "type": "java.lang.Double",
+            "description": "Cost for sending SMS"
+        },
+        {
+            "name": "bcb.message.whatsapp.cost",
+            "type": "java.lang.Double",
+            "description": "Cost for sending Whatsapp messages"
+        }
+    ]
+}
