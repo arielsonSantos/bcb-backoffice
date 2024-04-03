@@ -25,7 +25,7 @@ public class BCBBackOfficeApplication {
     }
 
     @Bean
-    @Profile("!test")
+    @Profile("receiver")
     MessageStatusReceiver receiver() {
         return new MessageStatusReceiver();
     }

@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Profile;
 
 import br.com.arielsonsantos.bcbbackoffice.dto.message.ReceiveMessageQueueObject;
 
-@Profile("!test")
+@Profile("receiver")
 @RabbitListener(queues = "q.message-status")
 public class MessageStatusReceiver {
 
